@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optimizador de Portafolio de Inversiones</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body> 
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-chart-line"></i> Optimizador de Portafolio</h1>
+                <p>Maximiza tus inversiones con restricción presupuestaria</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Input Section -->
+            <section class="input-section">
+                <div class="card">
+                    <h2><i class="fas fa-cog"></i> Configuración</h2>
+                    
+                    <!-- Capacity Input -->
+                    <div class="form-group">
+                        <label for="capacidad">
+                            <i class="fas fa-wallet"></i> Capacidad Presupuestaria (USD)
+                        </label>
+                        <input type="number" id="capacidad" placeholder="Ej: 10000" min="1" required>
+                    </div>
+
+                    <!-- Projects Form -->
+                    <div class="projects-section">
+                        <div class="projects-header">
+                            <h3><i class="fas fa-project-diagram"></i> Proyectos de Inversión</h3>
+                            <button type="button" id="addProject" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Agregar Proyecto
+                            </button>
+                        </div>
+                        
+                        <div id="projectsContainer" class="projects-container">
+                            <!-- Projects will be added here dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        <button type="button" id="calculateBtn" class="btn btn-success">
+                            <i class="fas fa-calculator"></i> Calcular
+                        </button>
+                        <button type="button" id="clearBtn" class="btn btn-secondary">
+                            <i class="fas fa-trash"></i> Limpiar
+                        </button>
+                        <button type="button" id="loadExampleBtn" class="btn btn-info">
+                            <i class="fas fa-lightbulb"></i> Cargar Ejemplo
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section" id="resultsSection" style="display: none;">
+                <div class="card">
+                    <h2><i class="fas fa-chart-bar"></i> Resultados de la Optimización</h2>
+                    
+                    <!-- Loading Indicator -->
+                    <div id="loadingIndicator" class="loading" style="display: none;">
+                        <div class="spinner"></div>
+                        <p>Optimizando portafolio...</p>
+                    </div>
+
+                    <!-- Results Content -->
+                    <div id="resultsContent">
+                        <!-- Summary Cards -->
+                        <div class="summary-cards">
+                            <div class="summary-card">
+                                <div class="card-icon">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="card-content">
+                                    <h3>Proyectos Seleccionados</h3>
+                                    <p id="selectedCount">0</p>
+                                </div>
+                            </div>
+                            
+                            <div class="summary-card">
+                                <div class="card-icon">
+                                    <i class="fas fa-dollar-sign"></i>
+                                </div>
+                                <div class="card-content">
+                                    <h3>Ganancia Total</h3>
+                                    <p id="totalGain">$0</p>
+                                </div>
+                            </div>
+                            
+                            <div class="summary-card">
+                                <div class="card-icon">
+                                    <i class="fas fa-weight-hanging"></i>
+                                </div>
+                                <div class="card-content">
+                                    <h3>Peso Total</h3>
+                                    <p id="totalWeight">$0</p>
+                                </div>
+                            </div>
+                            
+                            <div class="summary-card">
+                                <div class="card-icon">
+                                    <i class="fas fa-percentage"></i>
+                                </div>
+                                <div class="card-content">
+                                    <h3>Capacidad Utilizada</h3>
+                                    <p id="capacityUsed">0%</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Selected Projects Table -->
+                        <div class="results-table">
+                            <h3><i class="fas fa-list"></i> Proyectos Seleccionados</h3>
+                            <div class="table-container">
+                                <table id="selectedProjectsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Proyecto</th>
+                                            <th>Costo</th>
+                                            <th>Ganancia</th>
+                                            <th>Eficiencia</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="selectedProjectsBody">
+                                        <!-- Selected projects will be added here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Charts Section -->
+                        <div class="charts-section">
+                            <div class="chart-container">
+                                <h3><i class="fas fa-chart-pie"></i> Distribución de Inversión</h3>
+                                <canvas id="investmentChart"></canvas>
+                            </div>
+                            
+                            <div class="chart-container">
+                                <h3><i class="fas fa-chart-line"></i> Eficiencia por Proyecto</h3>
+                                <canvas id="efficiencyChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Detailed Analysis -->
+                        <div class="detailed-analysis">
+                            <h3><i class="fas fa-analytics"></i> Análisis Detallado</h3>
+                            <div class="analysis-grid">
+                                <div class="analysis-item">
+                                    <h4>Eficiencia del Portafolio</h4>
+                                    <p id="portfolioEfficiency">0.00</p>
+                                </div>
+                                <div class="analysis-item">
+                                    <h4>Proyectos Disponibles</h4>
+                                    <p id="totalProjects">0</p>
+                                </div>
+                                <div class="analysis-item">
+                                    <h4>Porcentaje de Selección</h4>
+                                    <p id="selectionPercentage">0%</p>
+                                </div>
+                                <div class="analysis-item">
+                                    <h4>Ganancia Potencial</h4>
+                                    <p id="potentialGain">$0</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2024 Optimizador de Portafolio de Inversiones. Desarrollado con <i class="fas fa-heart"></i></p>
+        </footer>
+    </div>
+
+    <!-- Error Modal -->
+    <div id="errorModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-exclamation-triangle"></i> Error</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p id="errorMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="closeErrorModal()">Aceptar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
