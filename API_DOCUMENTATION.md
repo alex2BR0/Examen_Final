@@ -364,29 +364,5 @@ curl -X POST "http://localhost:8000/optimizar/detallado" \
 curl -X GET "http://localhost:8000/health"
 ```
 
-## Notas de Implementación
 
-### Algoritmo Utilizado
-El microservicio utiliza **programación dinámica** para resolver el problema de la mochila (Knapsack Problem):
 
-- **Complejidad temporal**: O(n * W) donde n es el número de objetos y W es la capacidad
-- **Complejidad espacial**: O(n * W)
-- **Optimalidad**: Garantiza la solución óptima en todos los casos
-
-### Validaciones Implementadas
-1. **Validación de tipos**: Todos los campos deben tener el tipo correcto
-2. **Validación de rangos**: Los valores deben estar dentro de los límites permitidos
-3. **Validación de unicidad**: Los nombres de los objetos deben ser únicos
-4. **Validación de consistencia**: Los datos deben ser consistentes entre sí
-
-### Manejo de Errores
-- **Errores de validación**: Se devuelven con código 422 y detalles específicos
-- **Errores de servidor**: Se devuelven con código 500 y mensaje genérico
-- **Errores de cliente**: Se devuelven con código 400 y explicación del problema
-
-### Logging
-El servicio registra:
-- Todas las solicitudes de optimización
-- Errores y excepciones
-- Tiempos de respuesta
-- Estadísticas de uso
